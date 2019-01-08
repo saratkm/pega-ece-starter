@@ -26,6 +26,10 @@ Open a command window and run:
 This runs Cucumber features using Cucumber's JUnit runner. The `@RunWith(CucumberWithSerenity.class)` annotation on the `CucumberTestSuite`
 class tells JUnit to kick off Cucumber.
 
+Change project to eclipse project
+	mvn eclipse:clean
+	mvn eclipse:eclipse
+
 ## Use Gradle
 
 Open a command window and run:
@@ -34,6 +38,10 @@ Open a command window and run:
 
 This runs Cucumber features using Cucumber's JUnit runner. The `@RunWith(CucumberWithSerenity.class)` annotation on the `CucumberTestSuite`
 class tells JUnit to kick off Cucumber.
+
+Change project to eclipse project
+	gradlew clean
+	gradlew eclipse
 
 ## Viewing the reports
 
