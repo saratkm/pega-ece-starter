@@ -119,7 +119,7 @@ public class ConfigFileReader {
 	public String getNewJson(String ScnString) {
 		// TODO Auto-generated method stub
 		String bsu = properties.getProperty("bodyscenario_"+ScnString+"_Updated");
-		if(bsu != null) return (getFilesPath()+bsu);
+		if(bsu != null) return (getTmpFilesPath()+bsu);
 		else throw new RuntimeException("Body Scenario Updated for "+ScnString+" not specified in the Configuration.properties file for the Key:bodyscenario_?_Updated");
 	}
 

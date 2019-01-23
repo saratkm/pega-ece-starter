@@ -150,7 +150,7 @@ public class Scenario_01XX_StepDefintions {
 		Assert.assertEquals(csvExpData.getEntry("AR_Cust_SSOR"), responseJson.getDataEntry("SSOR"));
 		responseJson.backTrack();
 		System.out.println("Finished asserting comparison between response and expected output");
-		responseJson.saveAs("D:\\response.json");
+		responseJson.saveAs( configFileReader.getTmpFilesPath()+"response.json");
 		System.out.println("End. Response = " + eligibility);
 	}
 	
