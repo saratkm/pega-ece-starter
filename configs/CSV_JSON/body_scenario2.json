@@ -1,0 +1,367 @@
+{
+  "RequestExecutionDate": "20180305",
+  "Customer": 
+    {
+      "DOB": 19940922,
+      "Hdr_PTNR_Ind": "",
+      "PTNR_SSR": "",
+      "SexCode": "F",
+      "SSOR": "204794278",
+      "HdrAddressLine": "7 EDELSTEN CT, CARRARA 4211",
+      "HdrNameLine": "(F) MS AMY,SHMAMY,DOE",
+      "ReverseName": "DOE,AMY,SHMAMY",
+      "PersonID": "204794278",
+      "Address": {
+        "AMR": "5077",
+        "AddressLine1": "",
+        "AddressLine2": "7 EDELSTEN CT",
+        "AddressLine3": "String",
+        "StateCode": "QLD",
+        "Postcode": 4211,
+        "Suburb": "CARRARA",
+        "Country": "Australia",
+        "CountryCode": "AU",
+        "CommunityCode": "",
+        "DeliveryPointID": "56980590",
+        "DOE": "19940922",
+        "ExtAddressSrcCode": "",
+        "ABSMeshCodeBlockID": "30554070000",
+        "BestLvlCode": "PCD",
+        "ClkAddrVLDCode": "6",
+        "CNFDNCLvlCode": "",
+        "GNAFPersistID": "",
+        "Lattitude": "-19.5426",
+        "Longtitude": "146.79964",
+        "LocationID": "146.79964:-19.54260",
+        "LvlTypeCode": "8",
+        "PrcsDate": "20180427",
+        "RefSourceCode": "PCDE",
+        "RelyLvlCode": "",
+        "RemoteAreaInd": "N",
+        "TempPostAddressInd": "",
+        "Rental2WeAmnt": "",
+        "TypeCode": "HOM"
+      },
+      "MaritalStatus": {
+        "AMR": "1329",
+        "DOV": "19940922",
+        "MaritalStatusCode": "SIN",
+        "PPECode": "",
+        "PtnrSSR": "",
+        "RelQualCode": ""
+      },
+      "Circumstances": [
+        {
+          "Residency": {
+            "BirthCountryCode": "AU",
+            "ChannelCode": "",
+            "DateOfResidency": "19940922",
+            "DateofEntry": "19940922",
+            "CitizenshipStatus": [
+              {
+                "AMR": "1124",
+                "AUSCitizenCode": "",
+                "ChannelCode": "",
+                "CountryCitizenCode": "AU",
+                "DateOfEntry": "19940922"
+              }
+            ],
+            "Visa": {
+              "AMR": "",
+              "ChannelCode": "",
+              "AOSInd": "",
+              "ApplicationDate": "",
+              "EndDate": "",
+              "GrantDate": "",
+              "GrantNumber": "",
+              "VisaNumber": "",
+              "VisaSubclassCode": ""
+            }
+          },
+          "Education": {
+            "DateOfEntry": "20180216",
+            "EducationLevel": "Y12",
+            "SourceCode": "CLK",
+            "StudentReasonCode": "",
+            "StudentStatusCode": "NST",
+            "UniqueID": "",
+            "VerificationDocCode": "",
+            "Courses": [
+              {
+                "AdditionalStudyCode": "String",
+                "AllowTimeEndDate": "",
+                "AMR": "4582D4602",
+                "ConcurrentInstID": "",
+                "CourseEndDate": "20201112",
+                "CourseLevelCode": "TGB",
+                "CourseStartDate": "20180216",
+                "CurrentSemesterNum": "",
+                "CommentText": "OBFUSCATED",
+                "DateOfEntry": "20180216",
+                "EducationInstID": "3B019",
+                "EnrollmentVerificationCode": "VNR",
+                "ID": "16",
+                "InsitutionCourseID": "",
+                "MaxSemesterNum": "",
+                "RevExemptEndDate": "",
+                "SemesterYearNum": "",
+                "StudentEndDate": "20201112",
+                "StudentID": "101294011",
+                "StudentParticipationStatus": "FTS",
+                "StudentStartDate": "20180216",
+                "StudyCode": "",
+                "StudyModeCode": "INT",
+                "UniqueID": ""
+              }
+            ]
+          }
+        }
+      ],
+      "Kids": [],
+      "Claims": [
+        {
+          "AMR": 2,
+          "BenefitTypeCode": "YAL",
+          "DOV": "20180216",
+          "ReasonCode": "CLM"
+        }
+      ]
+    },
+   "Parents": [
+   {
+      "DOB": 19680225,
+      "Hdr_PTNR_Ind": "Y",
+      "PTNR_SSR": "202938458",
+      "SexCode": "F",
+      "SSOR": "208172524",
+      "HdrAddressLine": "7 EDELSTEN CT, CARRARA 4211",
+      "HdrNameLine": "(F) MRS SHARI,MAIRI,DOE",
+      "ReverseName": "DOE,SHARI,MAIRI",
+      "PersonID": "208172524",
+      "Address": {
+        "AMR": "5077",
+        "AddressLine1": "",
+        "AddressLine2": "7 EDELSTEN CT",
+        "AddressLine3": "String",
+        "StateCode": "QLD",
+        "Postcode": 4211,
+        "Suburb": "CARRARA",
+        "Country": "Australia",
+        "CountryCode": "AU",
+        "CommunityCode": "",
+        "DeliveryPointID": "56980590",
+        "DOE": "19940922",
+        "ExtAddressSrcCode": "",
+        "ABSMeshCodeBlockID": "30554070000",
+        "BestLvlCode": "PCD",
+        "ClkAddrVLDCode": "6",
+        "CNFDNCLvlCode": "",
+        "GNAFPersistID": "",
+        "Lattitude": "-19.5426",
+        "Longtitude": "146.79964",
+        "LocationID": "146.79964:-19.54260",
+        "LvlTypeCode": "8",
+        "PrcsDate": "20180427",
+        "RefSourceCode": "PCDE",
+        "RelyLvlCode": "",
+        "RemoteAreaInd": "N",
+        "TempPostAddressInd": "",
+        "Rental2WeAmnt": "",
+        "TypeCode": "HOM"
+      },
+      "MaritalStatus": {
+        "AMR": "1329",
+        "DOV": "19920912",
+        "MaritalStatusCode": "MAR",
+        "PPECode": "",
+        "PtnrSSR": "202938458",
+        "RelQualCode": ""
+      },
+      "Circumstances": [
+        {
+          "Residency": {
+            "BirthCountryCode": "NZ",
+            "ChannelCode": "",
+            "DateOfResidency": "19680225",
+            "DateofEntry": "19680225",
+            "CitizenshipStatus": [
+              {
+                "AMR": "1124",
+                "AUSCitizenCode": "",
+                "ChannelCode": "",
+                "CountryCitizenCode": "AU",
+                "DateOfEntry": "19930127"
+              },
+              {
+                "AMR": "1125",
+                "AUSCitizenCode": "",
+                "ChannelCode": "",
+                "CountryCitizenCode": "NZ",
+                "DateOfEntry": "19680225"
+              }
+            ],
+            "Visa": {
+              "AMR": "4347",
+              "ChannelCode": "IMM",
+              "AOSInd": "",
+              "ApplicationDate": "19930127",
+              "EndDate": "",
+              "GrantDate": "19930127",
+              "GrantNumber": "1810207895176",
+              "VisaNumber": "",
+              "VisaSubclassCode": "444"
+            }
+          },
+          
+          "Earnings":[]
+        }
+      ],
+      "Kids": [
+        {
+          "PersonID": 208172524,
+          "RecordType": "CUSTOMER.CHILD.DETAILS",
+          "SSR": 204794278,
+          "Claims": [
+            {
+              "AMR": 2668,
+              "BenefitTypeCode": "FTB",
+              "DOV": "20090701",
+              "ReasonCode": "CLM"
+            }
+          ]
+        }
+      ],
+      "Claims": []
+    },
+   {
+      "DOB": 19650830,
+      "Hdr_PTNR_Ind": "Y",
+      "PTNR_SSR": "208172524",
+      "SexCode": "M",
+      "SSOR": "202938458",
+      "HdrAddressLine": "7 EDELSTEN CT, CARRARA 4211",
+      "HdrNameLine": "(M) MR LANDO,SHMANDO,DOE",
+      "ReverseName": "DOE,LANDO,SHMANDO",
+      "PersonID": "202938458",
+      "Address": {
+        "AMR": "5077",
+        "AddressLine1": "",
+        "AddressLine2": "7 EDELSTEN CT",
+        "AddressLine3": "String",
+        "StateCode": "QLD",
+        "Postcode": 4211,
+        "Suburb": "CARRARA",
+        "Country": "Australia",
+        "CountryCode": "AU",
+        "CommunityCode": "",
+        "DeliveryPointID": "56980590",
+        "DOE": "19940922",
+        "ExtAddressSrcCode": "",
+        "ABSMeshCodeBlockID": "30554070000",
+        "BestLvlCode": "PCD",
+        "ClkAddrVLDCode": "6",
+        "CNFDNCLvlCode": "",
+        "GNAFPersistID": "",
+        "Lattitude": "-19.5426",
+        "Longtitude": "146.79964",
+        "LocationID": "146.79964:-19.54260",
+        "LvlTypeCode": "8",
+        "PrcsDate": "20180427",
+        "RefSourceCode": "PCDE",
+        "RelyLvlCode": "",
+        "RemoteAreaInd": "N",
+        "TempPostAddressInd": "",
+        "Rental2WeAmnt": "",
+        "TypeCode": "HOM"
+      },
+      "MaritalStatus": {
+        "AMR": "1329",
+        "DOV": "19920912",
+        "MaritalStatusCode": "MAR",
+        "PPECode": "",
+        "PtnrSSR": "208172524",
+        "RelQualCode": ""
+      },
+      "Circumstances": [
+        {
+          "Residency": {
+            "BirthCountryCode": "AU",
+            "ChannelCode": "",
+            "DateOfResidency": "19650830",
+            "DateofEntry": "19650830",
+            "CitizenshipStatus": [
+              {
+                "AMR": "1124",
+                "AUSCitizenCode": "",
+                "ChannelCode": "",
+                "CountryCitizenCode": "AU",
+                "DateOfEntry": "19650830"
+              }
+            ]
+          },
+          "Earnings": [
+            {
+              "DateOfEntry": "",
+              "IncomeBankCredit": 0,
+              "AMR": "1792",
+              "IncomeFreqCode": "6MO",
+              "AverageInd": "",
+              "AverageTypeCode": "",
+              "ChangeReasonCode": "",
+              "ChannelCode": "CSO",
+              "DateOfVerification": "20180305",
+              "EarningsAmount": "2700000",
+              "EarningsVerificationCode": "FVP",
+              "EmploymentStatusCode": "FTE",
+              "HrPerFNNum": "String",
+              "ID": "5",
+              "UniqueID": ""
+            },{
+              "DateOfEntry": "",
+              "IncomeBankCredit": 0,
+              "AMR": "1792",
+              "IncomeFreqCode": "6MO",
+              "AverageInd": "",
+              "AverageTypeCode": "",
+              "ChangeReasonCode": "",
+              "ChannelCode": "CSO",
+              "DateOfVerification": "20170305",
+              "EarningsAmount": "2700000",
+              "EarningsVerificationCode": "FVP",
+              "EmploymentStatusCode": "FTE",
+              "HrPerFNNum": "String",
+              "ID": "5",
+              "UniqueID": ""
+            },{
+              "DateOfEntry": "",
+              "IncomeBankCredit": 0,
+              "AMR": "1792",
+              "IncomeFreqCode": "6MO",
+              "AverageInd": "",
+              "AverageTypeCode": "",
+              "ChangeReasonCode": "",
+              "ChannelCode": "CSO",
+              "DateOfVerification": "20170905",
+              "EarningsAmount": "2700000",
+              "EarningsVerificationCode": "FVP",
+              "EmploymentStatusCode": "FTE",
+              "HrPerFNNum": "String",
+              "ID": "5",
+              "UniqueID": ""
+            }
+          ]
+        }
+      ],
+      "Kids": [
+        {
+          "PersonID": 202938458,
+          "RecordType": "CUSTOMER.CHILD.DETAILS",
+          "SSR": 204794278,
+          "Claims": []
+        }
+      ],
+      "Claims": []
+    }
+  ],
+  "Siblings": []
+}

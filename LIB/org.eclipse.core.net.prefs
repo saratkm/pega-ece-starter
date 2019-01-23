@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+version=1
+SystemProxiesEnabled=false
+org.eclipse.core.nnet.hasMigrated=true
+
+proxiesEnabled=true
+
+proxyData/HTTP/host=usaplaintpxy01.ad.infosys.com
+proxyData/HTTP/port=80
+proxyData/HTTP/hasAuth=true
+
+proxyData/HTTPS/host=usabosintpxy01.ad.infosys.com
+proxyData/HTTPS/port=80
+proxyData/HTTPS/hasAuth=true
