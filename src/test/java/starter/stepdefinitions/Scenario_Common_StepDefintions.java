@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.lang.Object;
 
@@ -56,7 +57,7 @@ public class Scenario_Common_StepDefintions {
 	static String configPath = null;
 	static String scenarioNo = null;
 	static String scenarioNumSaved = null;
-
+	static HashMap<String,String> elementsMap = null;
 
 
 
@@ -94,6 +95,7 @@ public class Scenario_Common_StepDefintions {
 
 		csvInpData = new CsvParser(csvInScn);
 		csvExpData = new CsvParser(csvExpectedScn);
+		elementsMap = configFileReader.getElementsMap();
 
 
 	}

@@ -5,11 +5,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
+import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import managers.CsvParser;
 
 //openArray is for "[]" Brackets
 //selectKey is for "{}" Brackets
@@ -65,6 +71,22 @@ public class JsonManipulator {
 	}
 	
 	public void putDataEntry(String key, String Data) {
+		try {
+			entryPointer.put(key, Data);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void putDataEntry(String key, JSONObject Data) {
+		try {
+			entryPointer.put(key, Data);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void putDataEntry(String key, JSONArray Data) {
 		try {
 			entryPointer.put(key, Data);
 		} catch (JSONException e) {
@@ -200,8 +222,8 @@ public class JsonManipulator {
 	//JV's Functions
 	public void putDataEntryForArray(String key, JSONObject newObject) {
 		try {
-			JSONArray earnings = entryPointer.getJSONArray(key);
-			earnings.put(newObject);
+			JSONArray newArray = entryPointer.getJSONArray(key);
+			newArray.put(newObject);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -232,4 +254,130 @@ public class JsonManipulator {
 		}
 		return null;
 	} 
+	
+	public String getDataEntryByPath(String entryPath) throws JSONException {
+		String [] strArray;
+		goToRoot();
+		String[] strPath = entryPath.split("\\.");
+		for(int i = 0; i < strPath.length-1; i++) {
+			if(strPath[i].indexOf(':') == -1) {
+				if(entryPointer.has(strPath[i]))
+					selectKey(strPath[i]);
+				else
+					return null;
+			}
+			else {
+				strArray = strPath[i].split(":");
+				if(entryPointer.has(strArray[0]) && entryPointer.getJSONArray(strArray[0]).length() > 0) {
+					openArray(strArray[0], Integer.parseInt(strArray[1]));
+				}
+				else
+					return null;
+			}
+		}
+		return getDataEntry(strPath[strPath.length-1]);
+	}
+	
+	public void putDataEntryByPath(String entryPath, String Data) throws JSONException {
+		if(Data.isEmpty()) return;
+		String [] strArray;
+		goToRoot();
+		String[] strPath = entryPath.split("\\.");
+		for(int i = 0; i < strPath.length-1; i++) {
+			if(strPath[i].indexOf(':') == -1) {
+				if(entryPointer.has(strPath[i]))
+					selectKey(strPath[i]);
+				else {
+					JSONObject newObjEntry = new JSONObject();
+					putDataEntry(strPath[i], newObjEntry);
+					selectKey(strPath[i]);
+				}
+			}
+			else {
+				strArray = strPath[i].split(":");
+				if(entryPointer.has(strArray[0]) && entryPointer.getJSONArray(strArray[0]).length() > Integer.parseInt(strArray[1])) {
+					openArray(strArray[0], Integer.parseInt(strArray[1]));
+				}
+				else{
+					JSONObject newObjEntry = new JSONObject();
+					putDataEntryForArray(strArray[0], newObjEntry);
+					openArray(strArray[0], Integer.parseInt(strArray[1]));
+				}
+			}
+		}
+		try {
+			entryPointer.put(strPath[strPath.length-1], Data);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public JSONObject getJSONObjectByPath(String entryPath) throws JSONException {
+		String [] strArray;
+		goToRoot();
+		String[] strPath = entryPath.split("\\.");
+		for(int i = 0; i < strPath.length-1; i++) {
+			if(strPath[i].indexOf(':') == -1) {
+				if(entryPointer.has(strPath[i]))
+					selectKey(strPath[i]);
+				else
+					return null;
+			}
+			else {
+				strArray = strPath[i].split(":");
+				if(entryPointer.has(strArray[0]) && entryPointer.getJSONArray(strArray[0]).length() > 0) {
+					openArray(strArray[0], Integer.parseInt(strArray[1]));
+				}
+				else
+					return null;
+			}
+		}
+		if(strPath[strPath.length-1].indexOf(':') == -1)
+			return selectKey(strPath[strPath.length-1]);
+		else {
+			strArray = strPath[strPath.length-1].split(":");
+			return openArray(strArray[0], Integer.parseInt(strArray[1]));
+		}
+			
+	}
+	
+	public JSONArray getJSONArrayByPath(String entryPath) throws JSONException {
+		String [] strArray;
+		goToRoot();
+		String[] strPath = entryPath.split("\\.");
+		for(int i = 0; i < strPath.length-1; i++) {
+			if(strPath[i].indexOf(':') == -1) {
+				if(entryPointer.has(strPath[i]))
+					selectKey(strPath[i]);
+				else
+					return null;
+			}
+			else {
+				strArray = strPath[i].split(":");
+				if(entryPointer.has(strArray[0]) && entryPointer.getJSONArray(strArray[0]).length() > 0) {
+					openArray(strArray[0], Integer.parseInt(strArray[1]));
+				}
+				else
+					return null;
+			}
+		}
+		strArray = strPath[strPath.length-1].split(":");
+		return getJSONArray(strArray[0]);
+	}
+	
+	public void updateRequestBody(CsvParser csvInpData, String csvDataInpKey, HashMap<String,String> elementsMap) throws JSONException {
+		goToRoot();
+		csvInpData.loadRow(csvDataInpKey);
+		
+		Map<String,String> hmRowEntry = csvInpData.getRow(csvDataInpKey);		
+		Map<String, String> lhmRowEntry = new TreeMap<String,String>(hmRowEntry);
+		
+		Iterator it = lhmRowEntry.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry csvInpElement = (Map.Entry)it.next();
+	        if(elementsMap.get(csvInpElement.getKey()) != null) {
+	        	putDataEntryByPath(elementsMap.get(csvInpElement.getKey()), csvInpElement.getValue().toString());	        	
+	        }
+	    }
+	}
 }

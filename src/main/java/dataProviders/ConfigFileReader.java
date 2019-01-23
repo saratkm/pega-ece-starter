@@ -4,8 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
+import au.com.bytecode.opencsv.CSVReader;
 import enums.DriverType;
 import enums.EnvironmentType;
 
@@ -153,6 +157,34 @@ public class ConfigFileReader {
 		String fp = properties.getProperty("tmpFilesPath");
 		if(fp != null) return fp;
 		else throw new RuntimeException("Files Path not specified in the Configuration.properties file for the Key:filesPath");
+	}
+	
+	public HashMap<String,String> getElementsMap(){
+		try
+		{
+			HashMap<String, String> table = new HashMap<String, String>();
+			String [] entryArray;
+			
+			CSVReader reader = new CSVReader(new FileReader(getFilesPath()+properties.getProperty("elementMapPath")), ',' );
+			List<String[]> csvEntries = reader.readAll();
+			Iterator<String[]> Iter = csvEntries.iterator();
+
+			while ( Iter.hasNext())
+			{
+				entryArray = (String[])Iter.next();   
+				table.put(entryArray[0], entryArray[1]);
+			}		
+			return table;
+		}
+		catch ( FileNotFoundException fnfe )
+		{
+			fnfe.printStackTrace();
+		}
+		catch ( IOException ioe )
+		{
+			ioe.printStackTrace();
+		}
+		return null;
 	}
 	
 }
