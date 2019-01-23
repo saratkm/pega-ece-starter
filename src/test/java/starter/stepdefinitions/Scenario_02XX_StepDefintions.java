@@ -60,16 +60,13 @@ import dataProviders.ConfigFileReader;
 
 import dataProviders.Csv;
 
-/*
-import dataConversion.*;
-*/
 //------- END IMPORT FROM TIM -------------
 
 public class Scenario_02XX_StepDefintions {
 
 	WebDriver driver 					=Scenario_Common_StepDefintions.driver;
 	ConfigFileReader configFileReader 	=Scenario_Common_StepDefintions.configFileReader;
-	String baseURI						=Scenario_Common_StepDefintions.srvcUrlScn;
+	String baseURI						=Scenario_Common_StepDefintions.baseURI;
 	String bodyScn						=Scenario_Common_StepDefintions.bodyScn;
 	String userId						=Scenario_Common_StepDefintions.userId;
 	String passwd						=Scenario_Common_StepDefintions.passwd;
@@ -81,8 +78,11 @@ public class Scenario_02XX_StepDefintions {
 	String statusTest 					=Scenario_Common_StepDefintions.statusTest;
 	String csvDataInpKey 				= Scenario_Common_StepDefintions.csvDataInpKey;
 	String csvDataOutKey 				= Scenario_Common_StepDefintions.csvDataOutKey;
-
-	String bodyScn1,authCookieEncoded,jsonBodyStr;
+	String scenarioNo 					=Scenario_Common_StepDefintions.scenarioNo;
+	String configPath 					=Scenario_Common_StepDefintions.configPath;
+	CsvParser inputData;
+	CsvParser outputData;
+	String bodyScn1,authCookieEncoded,jsonBodyStr,basePayloadFilePath, inputCsvFilePath, expectedOutputCsvFilePath, payloadFilePath;
 
 	//----------- IMPORT FROM TIM START---------
 	//WebDriver driver;
@@ -97,120 +97,22 @@ public class Scenario_02XX_StepDefintions {
 	
 	@Given("^Shari is (.*)$")
 	public void shari_is(String arg1) {
-		// Write code here that turns the phrase above into concrete actions
-	    //throw new PendingException();
 		
-		String age 					= csvInpData.getEntry(csvDataInpKey, "Cust_DOB");
-		String Cust_HdrAddrLine 	= csvInpData.getEntry(csvDataInpKey, "Cust_HdrAddrLine");
+		payloadFilePath = configFileReader.getNewJson(scenarioNo);
+		inputCsvFilePath = configFileReader.getCsvInScenario(scenarioNo);
+		expectedOutputCsvFilePath = configFileReader.getCsvExpectedScenario(scenarioNo);
 		
-		System.out.println("Age : "+age+"  CustHdrAddr :"+Cust_HdrAddrLine);
 		
-		String newAge = age.substring(0,6)+"18";
-		String newAdrs = Cust_HdrAddrLine.replaceAll("CARRARA", "canberra");
+		//Gets the data from CSV file
+		String identifier = csvDataInpKey;
+		inputData = new CsvParser(inputCsvFilePath, identifier);
 		
-		System.out.println("NewAge : "+newAge+"  CustHdrAddr :"+newAdrs);
-
+		String identifier2 = csvDataOutKey;
+		outputData = new CsvParser(expectedOutputCsvFilePath, identifier2);
 		
-		jsonDataHndl.selectKey("Customer");
-		System.out.println("Before DOB:"+jsonDataHndl.getDataEntry("DOB"));
-		jsonDataHndl.putDataEntry("DOB", newAge);
-		System.out.println("After DOB:"+jsonDataHndl.getDataEntry("DOB"));
-		
-		//jsonDataHndl.selectKey("HdrAddressLine");
-		System.out.println("Before Addr:"+jsonDataHndl.getDataEntry("HdrAddressLine"));
-		jsonDataHndl.putDataEntry("HdrAddressLine", newAdrs);
-		System.out.println("After Addr:"+jsonDataHndl.getDataEntry("HdrAddressLine"));
-			
-		jsonDataHndl.saveAs("D:\\DHS\\7JAN\\body_scenario2_1.json");
-		
-		List<List<String>> csvTable = new Csv("C:\\Users\\timothy.sultana\\Documents\\Project - Current\\JsonAndCsvFiles\\TestScenario2-Body.csv").getCsvTable();
-		Csv.displayCsvTable(csvTable);  // testing demonstration 
-		
-		//CsvParser csv = new CsvParser("C:\\Users\\can.nguyen\\Desktop\\Expected Output Scenario 1.csv","amyApplies");
-		//csv.displayRow();
-		//csv.displayTable();
-		
-		JsonManipulator jsonKey = new JsonManipulator("C:\\Users\\timothy.sultana\\Documents\\Project - Current\\JsonAndCsvFiles\\JsonPayload.json");
-		
-//		System.out.println(jsonKey.getCurrentKey());
-		
-		jsonKey.putDataEntry("RequestExecutionDate", csvTable.get(1).get(2));
-		jsonKey.selectKey("Customer");
-		jsonKey.putDataEntry("DOB", csvTable.get(1).get(3));
-		jsonKey.putDataEntry("SSOR", csvTable.get(1).get(4));
-		jsonKey.putDataEntry("HdrAddressLine", csvTable.get(1).get(5));
-		jsonKey.selectKey("Address");
-		jsonKey.putDataEntry("AddressLine2", csvTable.get(1).get(6));
-		jsonKey.putDataEntry("DOE", csvTable.get(1).get(7));
-		jsonKey.putDataEntry("Rental2WeAmnt", csvTable.get(1).get(8));
-		jsonKey.backTrack();
-		jsonKey.selectKey("MaritalStatus");
-		jsonKey.putDataEntry("MaritalStatusCode", csvTable.get(1).get(9));
-		jsonKey.putDataEntry("DOV", csvTable.get(1).get(10));
-		jsonKey.backTrack();
-		jsonKey.openArray("Circumstances",0);
-		jsonKey.selectKey("Residency");
-		jsonKey.putDataEntry("BirthCountryCode", csvTable.get(1).get(11));
-		jsonKey.putDataEntry("DateOfResidency", csvTable.get(1).get(12));
-		jsonKey.putDataEntry("DateofEntry", csvTable.get(1).get(13));
-		jsonKey.openArray("CitizenshipStatus",0);
-		jsonKey.putDataEntry("CountryCitizenCode", csvTable.get(1).get(14));
-		jsonKey.putDataEntry("DateOfEntry", csvTable.get(1).get(15));
-		jsonKey.backTrack();
-		jsonKey.selectKey("Visa");
-		jsonKey.putDataEntry("GrantDate", csvTable.get(1).get(16));
-		jsonKey.putDataEntry("VisaNumber", csvTable.get(1).get(17));
-		jsonKey.putDataEntry("VisaSubclassCode", csvTable.get(1).get(18));
-		jsonKey.backTrack(2);
-		jsonKey.selectKey("Education");
-		jsonKey.putDataEntry("EducationLevel", csvTable.get(1).get(19));
-		jsonKey.putDataEntry("StudentStatusCode", csvTable.get(1).get(20));
-		jsonKey.openArray("Courses",0);
-		jsonKey.putDataEntry("CourseStartDate", csvTable.get(1).get(21));
-		jsonKey.putDataEntry("CourseEndDate", csvTable.get(1).get(22));
-		jsonKey.putDataEntry("DateOfEntry", csvTable.get(1).get(23));
-		jsonKey.putDataEntry("StudentParticipationStatus", csvTable.get(1).get(24));
-		jsonKey.backTrack(3);
-		//jsonKey.backTrack(2);
-		//No earnings
-		// uses 25,26,27,28
-		jsonKey.openArray("Claims",0);
-		jsonKey.putDataEntry("BenefitTypeCode", csvTable.get(1).get(29));
-		jsonKey.putDataEntry("DOV", csvTable.get(1).get(30));
-		jsonKey.backTrack(2);
-		//Parent 1
-		jsonKey.openArray("Parents",0);
-		jsonKey.openArray("Kids",0);
-		jsonKey.putDataEntry("SSR", csvTable.get(1).get(31));
-		jsonKey.openArray("Claims",0);
-		jsonKey.putDataEntry("BenefitTypeCode", csvTable.get(1).get(32));
-		jsonKey.putDataEntry("DOV", csvTable.get(1).get(33));
-		//No earnings for parent 1
-		// jsonKey.backTrack(2);
-		// uses 34,35,36,37
-		jsonKey.backTrack(3);
-		jsonKey.openArray("Parents",1);
-		jsonKey.openArray("Kids",0);
-		jsonKey.putDataEntry("SSR", csvTable.get(1).get(38));
-		//no claims for parent 2
-		// uses 39,40
-		jsonKey.backTrack();
-		jsonKey.openArray("Circumstances",0);
-		jsonKey.openArray("Earnings",0);
-		jsonKey.putDataEntry("IncomeFreqCode", csvTable.get(1).get(41));
-		jsonKey.putDataEntry("DateOfVerification", csvTable.get(1).get(42));
-		jsonKey.putDataEntry("EarningsAmount", csvTable.get(1).get(43));
-		//Scenario 2 additions
-		// unfinished
-//		jsonKey.putDataEntry("IncomeFreqCode", csvTable.get(1).get(44));
-//		jsonKey.putDataEntry("DateOfVerification", csvTable.get(1).get(45));
-//		jsonKey.putDataEntry("EarningsAmount", csvTable.get(1).get(46));
-//		
-//		jsonKey.putDataEntry("IncomeFreqCode", csvTable.get(1).get(47));
-//		jsonKey.putDataEntry("DateOfVerification", csvTable.get(1).get(48));
-//		jsonKey.putDataEntry("EarningsAmount", csvTable.get(1).get(49));
-		
-		jsonKey.saveAs("C:\\Users\\timothy.sultana\\Documents\\Project - Current\\JsonAndCsvFiles\\JsonResponse.json");
+		//Prepares the JSON payload to be sent to the Pega server
+		prepareJSONPayload();
+		System.out.println("Finished modifying JSON payload with test data from CSV file");
 	
 	}
 	
@@ -221,8 +123,7 @@ public class Scenario_02XX_StepDefintions {
 		configFileReader= new ConfigFileReader();
 		
     	baseURI  = configFileReader.getApplicationUrl();		//	"https://infy-dhs-dt1.pegacloud.net/prweb/PRRestService/entitlement/v1/calculate/YAL-WIP1";
-    	//bodyScn1 = "D:\\DHS\\7JAN\\body_scenario2.json";
-    	bodyScn1 = "C:\\Users\\timothy.sultana\\Documents\\Project - Current\\JsonAndCsvFiles\\JsonResponse.json";        //"D:\\DHS\\7JAN\\body_scenario1.json";
+    	bodyScn1 = payloadFilePath;        //"D:\\DHS\\7JAN\\body_scenario1.json";
     	userId   = configFileReader.getUserId();				//	"seri.charoensri@pega.com";
     	passwd   = configFileReader.getPasswd();				//	"rules";
     	jsonFP	 = new File(bodyScn1);
@@ -246,11 +147,6 @@ public class Scenario_02XX_StepDefintions {
 	        extract().
 	        	response();
 
-//    	System.out.println("Status Code  :"+ response.statusCode()); //demonstration
-//    	System.out.println("Content Type :"+ response.contentType());
-    	
-    	
-    	
     	 // Retrieve the body of the Response
     	 ResponseBody body = response.getBody();
     	 
@@ -259,81 +155,159 @@ public class Scenario_02XX_StepDefintions {
  		 	 try {
  			 jsonObject = new JSONObject( body.asString() );
  		 } catch (JSONException e) {
- 			 // TODO Auto-generated catch block
- 			 e.printStackTrace();
+  			 e.printStackTrace();
  		 } 
  		 //Saves the response as a JSON file
- 		 String filePath = "C:\\Users\\timothy.sultana\\Documents\\Project - Current\\JsonAndCsvFiles\\JsonResponse.json";
+ 		 String filePath = configFileReader.getTmpFilesPath() + "body_UpdatedScenario2.json";
  		 JsonManipulator.saveAs(jsonObject, filePath);
  		 //Loads JSON file into JsonManipulator class
  		 JsonManipulator answer = new JsonManipulator(filePath);
- 		
-    	 
- 		 List<List<String>> csvTable = new Csv("C:\\Users\\timothy.sultana\\Documents\\Project - Current\\JsonAndCsvFiles\\Response.csv").getCsvTable();
  		 
     	 
     	 //=== STRING CASTING METHODS ====//
     	 // By using the ResponseBody.asString() method, we can convert the  body into the string representation.
-    	 System.out.println("Response Body is: " + body.asString());
+    	 //System.out.println("Response Body is: " + body.asString());         View the body
     	 //Assert.assertEquals(body.asString().contains("\"StartDate\":\"2018-02-16\""), true);
-    	 int answerIndex = body.asString().indexOf("\"Calculations\":{\"IsEligible\":") + 29;
-    	 //String answer = body.asString().substring(answerIndex, answerIndex+5);
 
     	 answer.selectKey("AssessmentResults");
     	 answer.openArray("Customers",0);
     	 //Assert.assertEquals(csvTable.get(1).get(2),answer.getDataEntry("HdrNameLine"));
-    	 Assert.assertEquals(csvTable.get(1).get(5),answer.getDataEntry("SSOR"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_SSOR"),answer.getDataEntry("SSOR"));
     	 answer.openArray("PaymentCycles",0);
-    	 Assert.assertEquals(csvTable.get(1).get(6),answer.getDataEntry("StartDate"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_StartDate"),answer.getDataEntry("StartDate"));
     	 answer.openArray("Claims",0);
-    	 Assert.assertEquals(csvTable.get(1).get(7),answer.getDataEntry("AMR"));
-    	 Assert.assertEquals(csvTable.get(1).get(8),answer.getDataEntry("BenefitTypeCode"));
-    	 Assert.assertEquals(csvTable.get(1).get(9),answer.getDataEntry("Amount").toString().substring(0, 11));
-    	 answer.selectKey("Calculations");
-    	 Assert.assertEquals(csvTable.get(1).get(10),answer.getDataEntry("ParentalIncomeDeduction").toString().substring(0, 11));
-    	 Assert.assertEquals(csvTable.get(1).get(11),answer.getDataEntry("IncomeBankOpeningBalance"));
-    	 Assert.assertEquals(csvTable.get(1).get(12),answer.getDataEntry("ParentalIncome"));
-    	 Assert.assertEquals(csvTable.get(1).get(13),answer.getDataEntry("Amount").toString().substring(0, 11));
-    	 Assert.assertEquals(csvTable.get(1).get(14),answer.getDataEntry("BasicRate"));
-    	 Assert.assertEquals(csvTable.get(1).get(15),answer.getDataEntry("IncomeBankCredit"));
-    	 Assert.assertEquals(csvTable.get(1).get(16),answer.getDataEntry("IsFulltimeStudent"));
-    	 Assert.assertEquals(csvTable.get(1).get(17),answer.getDataEntry("PersonalIncomeDeductionRateBand1"));
-    	 Assert.assertEquals(csvTable.get(1).get(18),answer.getDataEntry("PersonalIncomeDeductionRateBand2"));
-    	 Assert.assertEquals(csvTable.get(1).get(19),answer.getDataEntry("IsEligible"));
-    	 Assert.assertEquals(csvTable.get(1).get(20),answer.getDataEntry("PersonalIncomeDeduction"));
-    	 Assert.assertEquals(csvTable.get(1).get(21),answer.getDataEntry("PersonalIncome"));
-    	 Assert.assertEquals(csvTable.get(1).get(22),answer.getDataEntry("IncomeBankClosingBalance"));
-    	 Assert.assertEquals(csvTable.get(1).get(23),answer.getDataEntry("PersonalIncomeDeductionBand1"));
-    	 Assert.assertEquals(csvTable.get(1).get(24),answer.getDataEntry("IsAustralianResident"));
-    	 Assert.assertEquals(csvTable.get(1).get(25),answer.getDataEntry("IsParentalIncomeTestRequired"));
-    	 Assert.assertEquals(csvTable.get(1).get(26),answer.getDataEntry("PersonalIncomeDeductionBand2"));
-    	 Assert.assertEquals(csvTable.get(1).get(27),answer.getDataEntry("ParentalIncomeThreshold"));
-    	 Assert.assertEquals(csvTable.get(1).get(28),answer.getDataEntry("Age"));
-    	 answer.backTrack();
-    	 Assert.assertEquals(csvTable.get(1).get(29),answer.getDataEntry("DOV"));
-    	 Assert.assertEquals(csvTable.get(1).get(30),answer.getDataEntry("ReasonCode"));
-    	 answer.backTrack();
-    	 Assert.assertEquals(csvTable.get(1).get(31),answer.getDataEntry("EndDate"));
-    	 answer.backTrack();
-    	 answer.openArray("Customers",1);
-    	 answer.openArray("PaymentCycles",0);
-    	 answer.openArray("Claims",0);
-    	 answer.selectKey("Calculations");
-    	 Assert.assertEquals(csvTable.get(1).get(32),answer.getDataEntry("IsEligible"));
-
     	 
+    	 // checking YA eligibility
+    	 if (statusTest.equals("pass")){
+        	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_AMR"),answer.getDataEntry("AMR"));
+    	 }
     	 
-    	 //=== JSON CASTING METHODS ==//
-    	 // First get the JsonPath object instance from the Response interface
-    	 //JsonPath jsonPathEvaluator = response.jsonPath();
-    	 //ArrayList SSOR = jsonPathEvaluator.get("AssessmentResults.Customers[1].SSOR");
-    	 //String ssrVal0 = SSOR.get(0).toString();
-    	 //System.out.println(ssrVal0);
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_BTC"),answer.getDataEntry("BenefitTypeCode"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Amount"),answer.getDataEntry("Amount").toString().substring(0, outputData.getEntry("AR_Cust_PC_Claims_Amount").length()));
+    	 answer.selectKey("Calculations");
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_ParentalIncomeDeduction"),answer.getDataEntry("ParentalIncomeDeduction").toString().substring(0, outputData.getEntry("AR_Cust_PC_Claims_Calculations_ParentalIncomeDeduction").length()));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_IncomeBankOpeningBalance"),answer.getDataEntry("IncomeBankOpeningBalance"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_ParentalIncome"),answer.getDataEntry("ParentalIncome"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_Amount"),answer.getDataEntry("Amount").toString().substring(0, outputData.getEntry("AR_Cust_PC_Claims_Calculations_Amount").length()));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_BasicRate"),answer.getDataEntry("BasicRate"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_IncomeBankCredit"),answer.getDataEntry("IncomeBankCredit"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_IsFulltimeStudent"),answer.getDataEntry("IsFulltimeStudent"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_PersonalIncomeDeductionRateBand1"),answer.getDataEntry("PersonalIncomeDeductionRateBand1"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_PersonalIncomeDeductionRateBand2"),answer.getDataEntry("PersonalIncomeDeductionRateBand2"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_IsEligible"),answer.getDataEntry("IsEligible"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_PersonalIncomeDeduction"),answer.getDataEntry("PersonalIncomeDeduction"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_PersonalIncome"),answer.getDataEntry("PersonalIncome"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_IncomeBankClosingBalance"),answer.getDataEntry("IncomeBankClosingBalance"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_PersonalIncomeDeductionBand1"),answer.getDataEntry("PersonalIncomeDeductionBand1"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_IsAustralianResident"),answer.getDataEntry("IsAustralianResident"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_IsParentalIncomeTestRequired"),answer.getDataEntry("IsParentalIncomeTestRequired"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_PersonalIncomeDeductionBand2"),answer.getDataEntry("PersonalIncomeDeductionBand2"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_ParentalIncomeThreshold"),answer.getDataEntry("ParentalIncomeThreshold"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_Calculations_Age"),answer.getDataEntry("Age"));
+    	 answer.backTrack();
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_DOV"),answer.getDataEntry("DOV"));
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_Claims_ReasonCode"),answer.getDataEntry("ReasonCode"));
+    	 answer.backTrack();
+    	 Assert.assertEquals(outputData.getEntry("AR_Cust_PC_EndDate"),answer.getDataEntry("EndDate"));
+    	 answer.backTrack(2);
+    	 
+    	 // checking cancellation of Parent's FTB
+    	 if (statusTest.equals("pass")) {
+	    	 answer.openArray("Customers",1);
+	    	 answer.openArray("PaymentCycles",0);
+	    	 answer.openArray("Claims",0);
+	    	 answer.selectKey("Calculations");
+	    	 Assert.assertEquals(outputData.getEntry("AR_Cust2_PC_Claims_Calculations_IsEligible"),answer.getDataEntry("IsEligible"));
+    	 }
+    	 System.out.println("TEST COMPLETED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 	}
 
 	public String generateStringFromResource(String path) throws IOException {
 		return new String(Files.readAllBytes(Paths.get(path)));
-	}	
+	}
+	
+	public void prepareJSONPayload() {
+		JsonManipulator jsonKey = new JsonManipulator(bodyScn);	
+		
+		jsonKey.putDataEntry("RequestExecutionDate", inputData.getEntry("ReqExecDate"));
+		jsonKey.selectKey("Customer");
+		jsonKey.putDataEntry("DOB", inputData.getEntry("Cust_DOB"));
+		jsonKey.putDataEntry("SSOR", inputData.getEntry("Cust_SSOR"));
+		jsonKey.putDataEntry("HdrAddressLine", inputData.getEntry("Cust_HdrAddrLine"));
+		jsonKey.selectKey("Address");
+		jsonKey.putDataEntry("AddressLine2", inputData.getEntry("Cust_Addr_AddrLine2"));
+		jsonKey.putDataEntry("DOE", inputData.getEntry("Cust_Addr_DOE"));
+		jsonKey.putDataEntry("Rental2WeAmnt", inputData.getEntry("Cust_Addr_Rental2WeAmnt"));
+		jsonKey.backTrack();
+		jsonKey.selectKey("MaritalStatus");
+		jsonKey.putDataEntry("MaritalStatusCode", inputData.getEntry("Cust_MarStat_MarStatCode"));
+		jsonKey.putDataEntry("DOV", inputData.getEntry("Cust_MarStat_DOV"));
+		jsonKey.backTrack();
+		jsonKey.openArray("Circumstances",0);
+		jsonKey.selectKey("Residency");
+		jsonKey.putDataEntry("BirthCountryCode", inputData.getEntry("Cust_Circ_Res_BCC"));
+		jsonKey.putDataEntry("DateOfResidency", inputData.getEntry("Cust_Circ_Res_DOR"));
+		jsonKey.putDataEntry("DateofEntry", inputData.getEntry("Cust_Circ_Res_DOE"));
+		jsonKey.openArray("CitizenshipStatus",0);
+		jsonKey.putDataEntry("CountryCitizenCode", inputData.getEntry("Cust_Circ_Res_CitStat_CCC"));
+		jsonKey.putDataEntry("DateOfEntry", inputData.getEntry("Cust_Circ_Res_CitStat_DOE"));
+		jsonKey.backTrack();
+		jsonKey.selectKey("Visa");
+		jsonKey.putDataEntry("GrantDate", inputData.getEntry("Cust_Circ_Visa_GrantDate"));
+		jsonKey.putDataEntry("VisaNumber", inputData.getEntry("Cust_Circ_Visa_VisaNo"));
+		jsonKey.putDataEntry("VisaSubclassCode", inputData.getEntry("Cust_Circ_Visa_VisaSubclassCode"));
+		jsonKey.backTrack(2);
+		jsonKey.selectKey("Education");
+		jsonKey.putDataEntry("EducationLevel", inputData.getEntry("Cust_Circ_Educ_EducLevel"));
+		jsonKey.putDataEntry("StudentStatusCode", inputData.getEntry("Cust_Circ_Educ_StudentStatusCode"));
+		jsonKey.openArray("Courses",0);
+		jsonKey.putDataEntry("CourseStartDate", inputData.getEntry("Cust_Circ_Educ_Courses_CourseStartDate"));
+		jsonKey.putDataEntry("CourseEndDate", inputData.getEntry("Cust_Circ_Educ_Courses_CourseEndDate"));
+		jsonKey.putDataEntry("DateOfEntry", inputData.getEntry("Cust_Circ_Educ_Courses_DOE"));
+		jsonKey.putDataEntry("StudentParticipationStatus", inputData.getEntry("Cust_Circ_Educ_Courses_StudentParticipationStatus"));
+		jsonKey.backTrack(3);
+		//jsonKey.backTrack(2);
+		//No earnings
+		// uses 25,26,27,28
+		jsonKey.openArray("Claims",0);
+		jsonKey.putDataEntry("BenefitTypeCode", inputData.getEntry("Cust_Claims_BenefitType"));
+		jsonKey.putDataEntry("DOV", inputData.getEntry("Cust_Claims_DOV"));
+		jsonKey.backTrack(2);
+		//Parent 1
+		jsonKey.openArray("Parents",0);
+		jsonKey.openArray("Kids",0);
+		jsonKey.putDataEntry("SSR", inputData.getEntry("P1_Kids_SSR"));
+		jsonKey.openArray("Claims",0);
+		jsonKey.putDataEntry("BenefitTypeCode", inputData.getEntry("P1_Kids_Claims_BenefitType"));
+		jsonKey.putDataEntry("DOV", inputData.getEntry("P1_Kids_Claims_DOV"));
+		//No earnings for parent 1
+		// jsonKey.backTrack(2);
+		// uses 34,35,36,37
+		jsonKey.backTrack(3);
+		jsonKey.openArray("Parents",1);
+		jsonKey.openArray("Kids",0);
+		jsonKey.putDataEntry("SSR", inputData.getEntry("P2_Kids_SSR"));
+		//no claims for parent 2
+		// uses 39,40
+		jsonKey.backTrack();
+		jsonKey.openArray("Circumstances",0);
+		jsonKey.openArray("Earnings",0);
+		jsonKey.putDataEntry("IncomeFreqCode", inputData.getEntry("P2_Circ_Earn_IncomeFreq"));
+		jsonKey.putDataEntry("DateOfVerification", inputData.getEntry("P2_Circ_Earn_DOV"));
+		jsonKey.putDataEntry("EarningsAmount", inputData.getEntry("P2_Circ_Earn_EarnAmt"));
+		jsonKey.backTrack();
+		jsonKey.openArray("Earnings",1);
+		jsonKey.putDataEntry("IncomeFreqCode", inputData.getEntry("P2_Circ_Earn_IncomeFreq2"));
+		jsonKey.putDataEntry("DateOfVerification", inputData.getEntry("P2_Circ_Earn_DOV2"));
+		jsonKey.putDataEntry("EarningsAmount", inputData.getEntry("P2_Circ_Earn_EarnAmt2"));
+		jsonKey.backTrack();
+		jsonKey.openArray("Earnings",2);
+		jsonKey.putDataEntry("IncomeFreqCode", inputData.getEntry("P2_Circ_Earn_IncomeFreq3"));
+		jsonKey.putDataEntry("DateOfVerification", inputData.getEntry("P2_Circ_Earn_DOV3"));
+		jsonKey.putDataEntry("EarningsAmount", inputData.getEntry("P2_Circ_Earn_EarnAmt3"));
+		
+		jsonKey.saveAs(payloadFilePath);
+	}
 	
 }

@@ -9,6 +9,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import dataProviders.ConfigFileReader;
+import dataProviders.Csv;
 import dataProviders.JsonManipulator;
 import io.restassured.response.Response;
 import managers.CsvParser;
@@ -78,127 +79,50 @@ public class Scenario_05XX_StepDefintions {
 	String statusTest 					=Scenario_Common_StepDefintions.statusTest;
 	String csvDataInpKey 				= Scenario_Common_StepDefintions.csvDataInpKey;
 	String csvDataOutKey 				= Scenario_Common_StepDefintions.csvDataOutKey;
-
-	String bodyscenarioUpdated,newJson;
-	
-	//----------- IMPORT FROM ather START---------
-	//WebDriver driver;
-	//ConfigFileReader configFileReader;
-	//String baseURI, bodyScn, bodyscenarioUpdated, userId, passwd,newJson;
-	//File jsonFP=null;
-	//Response response = null;
-	//----------- IMPORT FROM ather END---------
+	String bodyscenarioUpdate;
+	List<String> row;
+	String newJson;	
+	String scenarioNum 					= Scenario_Common_StepDefintions.scenarioNumSaved;
 	
 	
-	//=== Example code ===//
-	@Given("^Shari is currently Receiving FTB_scn5$")
-	public void shari_is_currently_Receiving_FTB_scn5() {
-	    // Write code here that turns the phrase above into concrete actions
-	    //throw new PendingException();
-		
-		String age 					= csvInpData.getEntry(csvDataInpKey, "Cust_DOB");
-		String Cust_HdrAddrLine 	= csvInpData.getEntry(csvDataInpKey, "Cust_HdrAddrLine");
-		
-		System.out.println("Age : "+age+"  CustHdrAddr :"+Cust_HdrAddrLine);
-		
-		String newAge = age.substring(0,6)+"18";
-		String newAdrs = Cust_HdrAddrLine.replaceAll("CARRARA", "canberra");
-		
-		System.out.println("NewAge : "+newAge+"  CustHdrAddr :"+newAdrs);
-
-		
-		jsonDataHndl.selectKey("Customer");
-		System.out.println("Before DOB:"+jsonDataHndl.getDataEntry("DOB"));
-		jsonDataHndl.putDataEntry("DOB", newAge);
-		System.out.println("After DOB:"+jsonDataHndl.getDataEntry("DOB"));
-		
-		//jsonDataHndl.selectKey("HdrAddressLine");
-		System.out.println("Before Addr:"+jsonDataHndl.getDataEntry("HdrAddressLine"));
-		jsonDataHndl.putDataEntry("HdrAddressLine", newAdrs);
-		System.out.println("After Addr:"+jsonDataHndl.getDataEntry("HdrAddressLine"));
-			
-		jsonDataHndl.saveAs("D:\\DHS\\7JAN\\body_scenario2_1.json");
-	}
-	//========== example code ============
-
-
-	
-	@Given("^user has first income(.*)$")
-	public void user_has_first_income(String arg1) throws IOException {
-		configFileReader= new ConfigFileReader();
-		baseURI  = configFileReader.getApplicationUrl();		//	"https://infy-dhs-dt1.pegacloud.net/prweb/PRRestService/entitlement/v1/calculate/YAL-WIP1";
-		bodyScn = configFileReader.getBodyScenario("1");         // 	"D:\\DHS\\7JAN\\body_scenario1.json";
-		bodyscenarioUpdated = configFileReader.getNewJson();
-		userId   = configFileReader.getUserId();				//	"seri.charoensri@pega.com";
-		passwd   = configFileReader.getPasswd();				//	"rules";
-		jsonFP	 = new File(bodyScn);
-		newJson = configFileReader.getNewJson();
-		
-//		List<List<String>> csvTable = new Csv("C:\\Users\\atheramjed.syed\\Desktop\\5.csv").getCsvTable();
-//		Csv.displayCsvTable(csvTable);
-		//CsvParser entries = new CsvParser("C:\\Users\\atheramjed.syed\\Desktop\\5.csv");
-		CsvParser entries = new CsvParser("D:\\DHS\\7JAN\\csvInScenario_5.csv");
-		
-		System.out.println(entries.getEntry("userReportedSecondIncome", "Cust_HdrAddrLine"));
-          System.out.println("***************");
-//  		String add = entries.getEntry("Test01ADependantBDependant", "Cust_HdrAddrLine");
-  		String age = entries.getEntry("userReportedSecondIncome", "Cust_DOB");
-	
-		JsonManipulator a = new JsonManipulator("D:\\DHS\\7JAN\\body_scenario1.json");
-		a.selectKey("Customer");
-//		a.openArray("Circumstances");
-//		a.selectKey("HdrAddressLine");
-//		a.openArray("CitizenshipStatus");
-//		System.out.println(a.getDataEntry("HdrAddressLine"));
-		System.out.println(a.getDataEntry("DOB"));
-//		a.putDataEntry("HdrAddressLine", add);
-		a.putDataEntry("DOB", age);
-		a.saveAs("D:\\DHS\\7JAN\\body_scenario5.1.json");
-//		System.out.println(a.getCurrentKey());
-//		a.backTrack(2);
-//		System.out.println(a.getCurrentKey());
-//		a.backTrack(5);
-		
-	}
-		
-//		System.out.println(a.getCurrentKey());
-//		a.backTrack();
-//		System.out.println(a.getCurrentKey());
-//		JSONObject o = a.getCurrentObject();
-//		o = Json.selectKey(o,"Customer");
-//		System.out.println(Json.getDataEntry(o, "DOB"));
-//a.saveAs("C:\\Users\\can.nguyen\\Desktop\\test2.json");
-//		File file = new File("5.csv");
-//		List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-//		for (String line : lines)
-//		   { 
-//		     String[] array = line.split(",");
-//		     System.out.println(array[0]);
-//		   }
-		
-
-	
-	
-//========= please move to COMMON function ======	
-public String generateStringFromResource(String path) throws IOException {
+	public String generateStringFromResource(String path) throws IOException {
 		return new String(Files.readAllBytes(Paths.get(path)));
-}
-//========= COMMON NOW ======
+		}
 	
+	@When("^user reported second earning$")
+	public void user_reported_second_earning() throws IOException {
+		
 	
-	
- @When("^user reported new earning$")
-	public void user_reported_new_earning() throws IOException {
-	 String authCookie = (userId + ":" + passwd);
- 	String authCookieEncoded = new String(Base64.encodeBase64(authCookie.getBytes()));
- 	String jsonBodyStr = generateStringFromResource(bodyScn);
- 	
-		response = RestAssured.given().
-				header("Authorization", "Basic "+ authCookieEncoded).	//->working:
-				//auth().preemptive().basic(userId, passwd).  			//->working:
-				contentType("application/json").
-				body(jsonFP).
-//				body(jsonBodyStr).
+			newJson = configFileReader.getNewJson(scenarioNum);   //getting json body request as (senarionum)
+			CsvParser entries = new CsvParser(configFileReader.getCsvInScenario(scenarioNum));//entries helps us in getting input data
+			String earnings1 = entries.getEntry(csvDataInpKey, "Cust_NE_EarningsAmount");//passing second earning to body via input csv
+			JsonManipulator a = new JsonManipulator(bodyScn); //"a" helps you to pass test data from input.csv in request
+			String add = entries.getEntry(csvDataInpKey, "Cust_HdrAddrLine");
+			String countrycode = entries.getEntry(csvDataInpKey, "Cust_Circ_Res_BCC");
+			String ssor_request = entries.getEntry(csvDataInpKey, "Cust_SSOR");
+			String startdate=entries.getEntry(csvDataInpKey, "Cust_Circ_Educ_Courses_DOE");
+			String enddate=entries.getEntry(csvDataInpKey, "Cust_Circ_Educ_Courses_CourseEndDate");
+			String benefittype=entries.getEntry(csvDataInpKey,"Cust_Claims_BenefitType");
+			a.selectKey("Customer");
+			a.putDataEntry("SSOR", ssor_request);
+			a.putDataEntry("HdrAddressLine", add);
+			a.openArray("Circumstances",0);
+			a.selectKey("Residency");
+			a.putDataEntry("BirthCountryCode", countrycode);
+			a.backTrack(1);
+			a.selectKey("Education");
+			a.putDataEntry("DateOfEntry", startdate);
+			a.openArray("Courses", 0);
+			a.putDataEntry("CourseEndDate", enddate);
+			a.saveAs(newJson);//new jason is created with your input test data
+			String authCookie = (userId + ":" + passwd);
+			String authCookieEncoded = new String(Base64.encodeBase64(authCookie.getBytes()));
+			String jsonBodyStr = generateStringFromResource(newJson);
+			response = RestAssured.given().
+			header("Authorization", "Basic "+ authCookieEncoded).	//->working:
+			contentType("application/json").//post jason request to retrieve response in below steps.
+			body(newJson).
+			body(jsonBodyStr).
 			when().
 	        	post(baseURI).
 	        then().
@@ -207,21 +131,148 @@ public String generateStringFromResource(String path) throws IOException {
 	        	log().all().
 	        extract().
 	        	response();
+			ResponseBody body = response.getBody();// Retrieve the body of the Response
 
-	    	System.out.println("Status Code  :"+ response.statusCode());
-	    	System.out.println("Content Type :"+ response.contentType());
-	    	
-	    	
-	    	 // Retrieve the body of the Response
-	    	 ResponseBody body = response.getBody();
-	  
+	}
+			@Then("^recalculation occurs$")
+			public void recalculation_occurs() {
+				ResponseBody body = response.getBody();
+				JSONObject jsonObject = new JSONObject();//Grabs the response body and makes a JSONObject of it
+				try {
+				jsonObject = new JSONObject( body.asString() );
+			} catch (JSONException e) {
+														// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			} 
+			String nJson =newJson.replaceAll(".json", "_Rsp05.json");//Saves the response as a JSON file
+			String filePath = nJson;
+			
+			JsonManipulator.saveAs(jsonObject, filePath);//Loads JSON file into JsonManipulator class
+//			JsonManipulator a = new JsonManipulator(filePath);
+			CsvParser response_Entries = new CsvParser(configFileReader.getCsvExpectedScenario(scenarioNum));	
+			String ssor =  response_Entries.getEntry(csvDataOutKey, "Cust_SSOR");
+			System.out.println("SSOR response excel :"+ssor);
+			String startdate = response_Entries.getEntry(csvDataOutKey, "Cust_Circ_Educ_Courses_CourseStartDate");
+			String enddate = response_Entries.getEntry(csvDataOutKey, "Cust_Circ_Educ_Courses_CourseEndDate");
+			System.out.println("end date excel:" +enddate);
+			String benefittypecode = response_Entries.getEntry(csvDataOutKey, "Cust_Claims_BenefitType");
+			JsonManipulator aresponse = new JsonManipulator(nJson);//a.response helps you retrieve value from response
+			aresponse.selectKey("AssessmentResults");
+			aresponse.openArray("Customers", 0);
+			aresponse.getDataEntry("HdrNameLine");
+			String name_Rsp = aresponse.getDataEntry("HdrNameLine");
+			String ssor_Rsp = aresponse.getDataEntry("SSOR");
+			aresponse.openArray("PaymentCycles", 0);
+			String startDate_Rsp = aresponse.getDataEntry("StartDate");
+			aresponse.openArray("Claims", 0);
+			String benefittypecode_Rsp = aresponse.getDataEntry("BenefitTypeCode");
+			aresponse.backTrack(1);
+			System.out.println("SSOR response is :"+ssor_Rsp);
+			System.out.println("benefit type code is:" +benefittypecode_Rsp);
+			
+			Assert.assertTrue(ssor.equals(ssor_Rsp));          //assertion to check expected and response from  testcase_1A
+			Assert.assertTrue(benefittypecode.equals(benefittypecode_Rsp));
+			
+			
+	
+	}
+			@When("^customer will have debt scenario$")
+			public void customer_will_have_debt_scenario() throws IOException {
+
+				newJson = configFileReader.getNewJson(scenarioNum);   //getting json body request as (senarionum)
+				CsvParser entries1 = new CsvParser(configFileReader.getCsvInScenario(scenarioNum));//entries helps us in getting input data
+				String earnings1 = entries1.getEntry(csvDataInpKey, "Cust_NE_EarningsAmount");//passing second earning to body via input csv
+				JsonManipulator b = new JsonManipulator(bodyScn); //"a" helps you to pass test data from input.csv in request
+				String add1 = entries1.getEntry(csvDataInpKey, "Cust_HdrAddrLine");
+				String countrycode1 = entries1.getEntry(csvDataInpKey, "Cust_Circ_Res_BCC");
+				String ssor_request1 = entries1.getEntry(csvDataInpKey, "Cust_SSOR");
+				String startdate1=entries1.getEntry(csvDataInpKey, "Cust_Circ_Educ_Courses_DOE");
+				String enddate1=entries1.getEntry(csvDataInpKey, "Cust_Circ_Educ_Courses_CourseEndDate");
+				String benefittype1=entries1.getEntry(csvDataInpKey,"Cust_Claims_BenefitType");
+				b.selectKey("Customer");
+				b.putDataEntry("SSOR", ssor_request1);
+				b.putDataEntry("HdrAddressLine", add1);
+				b.openArray("Circumstances",0);
+				b.selectKey("Residency");
+				b.putDataEntry("BirthCountryCode", countrycode1);
+				b.backTrack(1);
+				b.selectKey("Education");
+				b.putDataEntry("DateOfEntry", startdate1);
+				b.openArray("Courses", 0);
+				b.putDataEntry("CourseEndDate", enddate1);
+				b.saveAs(newJson);//new jason is created with your input test data
+				String authCookie = (userId + ":" + passwd);
+				String authCookieEncoded = new String(Base64.encodeBase64(authCookie.getBytes()));
+				String jsonBodyString = generateStringFromResource(newJson);
+				response = RestAssured.given().
+				header("Authorization", "Basic "+ authCookieEncoded).	//->working:
+				contentType("application/json").//post jason request to retrieve response in below steps.
+				body(newJson).
+				body(jsonBodyString).
+				when().
+		        	post(baseURI).
+		        then().
+		        	statusCode(200).
+		        	contentType(ContentType.JSON).
+		        	log().all().
+		        extract().
+		        	response();
+				ResponseBody body1 = response.getBody();// Retrieve the body of the Response
+			  
+			}
+
+
+			@Then("^re-calculation occurs for payment to be done by user$")
+			public void re_calculation_occurs_for_payment_to_be_done_by_user() {
+				ResponseBody body1 = response.getBody();
+				JSONObject jsonObject = new JSONObject();//Grabs the response body and makes a JSONObject of it
+				try {
+				jsonObject = new JSONObject( body1.asString() );
+			} catch (JSONException e) {
+														// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			} 
+			String nJson =newJson.replaceAll(".json", "_Rsp05_B.json");//Saves the response as a JSON file
+			String filePath = nJson;
+			
+			JsonManipulator.saveAs(jsonObject, filePath);//Loads JSON file into JsonManipulator class
+//			JsonManipulator a = new JsonManipulator(filePath);
+			CsvParser response_Entries1 = new CsvParser(configFileReader.getCsvExpectedScenario(scenarioNum));	
+			String ssor1 =  response_Entries1.getEntry(csvDataOutKey, "Cust_SSOR");
+			System.out.println("SSOR response excel :"+ssor1);
+			String startdate1 = response_Entries1.getEntry(csvDataOutKey, "Cust_Circ_Educ_Courses_CourseStartDate");
+			System.out.println("start date excel:" +startdate1);
+			String enddate1 = response_Entries1.getEntry(csvDataOutKey, "Cust_Circ_Educ_Courses_CourseEndDate");
+			System.out.println("end date excel:" +enddate1);
+			String benefittypecode1 = response_Entries1.getEntry(csvDataOutKey, "Cust_Claims_BenefitType");
+			JsonManipulator aresponse1 = new JsonManipulator(nJson);//a.response helps you retrieve value from response
+			aresponse1.selectKey("AssessmentResults");
+			aresponse1.openArray("Customers", 0);
+			aresponse1.getDataEntry("HdrNameLine");
+			String name_Rsp1 = aresponse1.getDataEntry("HdrNameLine");
+			String ssor_Rsp1 = aresponse1.getDataEntry("SSOR");
+			aresponse1.openArray("PaymentCycles", 0);
+			String startDate_Rsp1 = aresponse1.getDataEntry("StartDate");
+			aresponse1.openArray("Claims", 0);
+			String benefittypecode_Rsp1 = aresponse1.getDataEntry("BenefitTypeCode");
+			aresponse1.backTrack(1);
+			System.out.println("SSOR response is :"+ssor_Rsp1);
+			System.out.println("start date from second test case:" +startDate_Rsp1);
+			System.out.println("benefit type code is:" +benefittypecode_Rsp1);
+			
+			
+			Assert.assertTrue(startdate1.equals(startDate_Rsp1));
+
+			
+			}
+
+
 	}
 
-	@Then("^recalculation occurs$")
-	public void recalculation_occurs() {
-	    // Write code here that turns the phrase above into concrete actions
-	    
-	}
-	
-	
-}
+    
+
+
+
+

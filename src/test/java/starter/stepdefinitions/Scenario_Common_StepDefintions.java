@@ -53,12 +53,18 @@ public class Scenario_Common_StepDefintions {
 	static CsvParser csvExpData = null;
 	static String statusTest = null;
 	static String csvDataInpKey =null, csvDataOutKey = null;
+	static String configPath = null;
+	static String scenarioNo = null;
+	static String scenarioNumSaved = null;
+
+
 
 
 
 	@Given("^User initiatiates scenario \"([^\"]*)\"$")
 	public void user_initiatiates_scenario(String scenarioNum) throws JSONException, IOException {
 
+		scenarioNumSaved = scenarioNum;
 		configFileReader= new ConfigFileReader();
 		baseURI  = configFileReader.getApplicationUrl();		//	"https://infy-dhs-dt1.pegacloud.net/prweb/PRRestService/entitlement/v1/calculate/YAL-WIP1";
 
@@ -67,6 +73,8 @@ public class Scenario_Common_StepDefintions {
 		bodyScn=configFileReader.getBodyScenario(scenarioNum);
 		csvInScn=configFileReader.getCsvInScenario(scenarioNum);
 		csvExpectedScn=configFileReader.getCsvExpectedScenario(scenarioNum);
+		scenarioNo = scenarioNum;
+		configPath = System.getProperty("user.dir") + "/configs/CSV_JSON/";
 
 		System.out.println("Got CSV & Json files: "+bodyScn+" | "+csvInScn+" | "+csvExpectedScn);
 
